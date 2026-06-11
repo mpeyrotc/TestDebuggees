@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "InventoryTrackerApp": {
+      "commandName": "Project",
+      "commandLineArgs": "data\\inventory.csv data\\sales.csv"
+    }
+  }
+}

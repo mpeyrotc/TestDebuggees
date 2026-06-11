@@ -1,0 +1,6 @@
+Sku,Name,QuantityOnHand,ReorderPoint,ReorderQuantity,UnitCost
+WH-1001,Widget Alpha,50,10,100,2.50
+WH-1002,Widget Beta,25,25,50,5.00
+WH-1003,Gadget Gamma,120,30,200,1.75
+WH-1004,Sprocket Delta,8,15,75,12.00
+WH-1005,Bolt Epsilon,500,100,1000,0.10
