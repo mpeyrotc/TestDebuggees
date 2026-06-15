@@ -37,9 +37,20 @@ With the example input above:
 4. Enter quantity: **2**
 5. Observe that Tax shows $108.00 and Total shows $208.00
 
+## Command-line mode
+
+The app also accepts command-line arguments for non-interactive use:
+```
+dotnet run --project InvoiceCalcApp.csproj -- Widget 50 2
+```
+
+With the bug present, this throws an `InvalidOperationException` because the
+sanity check detects that tax ($108.00) exceeds the subtotal ($100.00).
+After fixing `ComputeTax`, the app prints the correct invoice and exits cleanly.
+
 ## How to debug
 
 1. Set a breakpoint on the `return` line in `TaxCalculator.ComputeTax`.
-2. Launch the app under the debugger.
-3. Enter the item details when prompted.
+2. Launch the app under the debugger (interactive mode, no args).
+3. Enter the item details when prompted (the app waits for console input).
 4. When the breakpoint hits, inspect the return value — it will be 108.00 instead of 8.00.
