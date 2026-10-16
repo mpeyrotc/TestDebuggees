@@ -1,22 +1,32 @@
-using System.Collections.Concurrent;
-
 namespace DiscountLibrary;
 
 /// <summary>Calculates the amount due after a percentage discount.</summary>
-public static class DiscountCalculator
+public sealed class DiscountCalculator
 {
-    private static readonly ConcurrentDictionary<decimal, decimal> TotalCache = new();
+    private readonly IDiscountProvider discountProvider;
+
+    /// <summary>Creates a calculator using the host's discount provider.</summary>
+    /// <param name="discountProvider">The provider supplied by the caller.</param>
+    public DiscountCalculator(IDiscountProvider discountProvider)
+    {
+        ArgumentNullException.ThrowIfNull(discountProvider);
+        this.discountProvider = discountProvider;
+    }
 
     /// <summary>Applies a whole-number percentage discount to a subtotal.</summary>
     /// <param name="subtotal">The nonnegative amount before the discount.</param>
     /// <param name="discountPercent">The discount percentage, from zero through one hundred.</param>
     /// <returns>The discounted amount due.</returns>
-    public static decimal CalculateTotal(decimal subtotal, int discountPercent)
+    public decimal CalculateTotal(decimal subtotal, int discountPercent)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(subtotal);
         ArgumentOutOfRangeException.ThrowIfNegative(discountPercent);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(discountPercent, 100);
 
-        return TotalCache.GetOrAdd(subtotal, amount => amount * (1 - discountPercent / 100m));
+        int effectiveDiscountPercent = this.discountProvider.GetDiscountPercent(subtotal, discountPercent);
+        ArgumentOutOfRangeException.ThrowIfNegative(effectiveDiscountPercent);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(effectiveDiscountPercent, 100);
+
+        return subtotal * (1 - effectiveDiscountPercent / 100m);
     }
 }
